@@ -39,10 +39,18 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Settings");
 
   const menuItems = [
-    { name: "Dashboard", icon: BarChart2 },
-    { name: "Manage Income Streams", icon: DollarSign },
-    { name: "Open Accounts Payable", icon: FileText },
-    { name: "Settings", icon: Settings },
+    { name: "Dashboard", icon: BarChart2, href: "/" },
+    {
+      name: "Manage Income Streams",
+      icon: DollarSign,
+      href: "/income-streams",
+    },
+    {
+      name: "Open Accounts Payable",
+      icon: FileText,
+      href: "/accounts-payable",
+    },
+    { name: "Settings", icon: Settings, href: "/settings" },
   ];
 
   return (
@@ -58,7 +66,7 @@ export default function SettingsPage() {
           {menuItems.map((item) => (
             <a
               key={item.name}
-              href="#"
+              href={item.href}
               className={`flex items-center px-6 py-3 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-50 ${
                 activeTab === item.name ? "bg-zinc-800 text-zinc-50" : ""
               }`}

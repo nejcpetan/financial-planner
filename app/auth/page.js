@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, router } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Eye, EyeOff, LockKeyhole, Github, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,16 +16,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function LoginPage() {
+export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  //const supabase = createClientComponentClient();
+  const [isLogin, setIsLogin] = useState(true); // New state to toggle between login/signup
 
-  const handleEmailLogin = async (e) => {
+  const supabase = createClientComponentClient();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -36,13 +38,26 @@ export default function LoginPage() {
       return;
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    if (isLogin) {
+      // Log in with email and password
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      setError(error.message);
+      if (error) {
+        setError(error.message);
+      }
+    } else {
+      // Sign up with email and password
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError(error.message);
+      }
     }
 
     setIsLoading(false);
@@ -68,10 +83,11 @@ export default function LoginPage() {
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-white">
-            Login
+            {isLogin ? "Login" : "Sign Up"}{" "}
+            {/* Toggle between Login and Sign Up */}
           </CardTitle>
           <CardDescription className="text-center text-zinc-400">
-            Choose your preferred login method
+            Choose your preferred method to {isLogin ? "login" : "sign up"}.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -130,11 +146,11 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-zinc-900 px-2 text-zinc-400">
-                Or continue with
+                Or {isLogin ? "login" : "sign up"} with email
               </span>
             </div>
           </div>
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-zinc-300">
                 Email
@@ -178,29 +194,22 @@ export default function LoginPage() {
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <Button type="submit" className="w-full" disabled={isLoading}>
-              <LockKeyhole className="mr-2 h-4 w-4" />
-              {isLoading ? "Signing In..." : "Sign In with Email"}
+              {isLogin ? "Login" : "Sign Up"}
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="text-center text-sm text-zinc-400">
-            <a
-              href="#"
-              className="hover:text-zinc-200 underline underline-offset-4"
+        <CardFooter className="text-sm text-center text-zinc-400">
+          <p>
+            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              className="font-medium text-zinc-200 hover:underline"
+              disabled={isLoading}
             >
-              Forgot your password?
-            </a>
-          </div>
-          <div className="text-center text-sm text-zinc-400">
-            Don't have an account?{" "}
-            <a
-              href="#"
-              className="hover:text-zinc-200 underline underline-offset-4"
-            >
-              Sign up
-            </a>
-          </div>
+              {isLogin ? "Sign up" : "Login"}
+            </button>
+          </p>
         </CardFooter>
       </Card>
     </div>
