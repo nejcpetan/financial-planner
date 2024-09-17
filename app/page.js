@@ -69,7 +69,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
+    <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50">
       <header className="flex justify-between items-center p-4 bg-zinc-900 border-b border-zinc-800">
         <h1 className="text-2xl font-bold">Nathan's Financial Tool</h1>
         {user ? (
@@ -112,7 +112,7 @@ export default function Home() {
         )}
       </header>
 
-      <main className="container mx-auto px-4 py-16">
+      <main className="flex-grow container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">
             Take Control of Your Finances
@@ -176,9 +176,9 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="bg-zinc-900 border-t border-zinc-800 mt-16 py-8">
+      <footer className="flex flex-col items-center justify-center bg-zinc-900 border-t border-zinc-800 py-8">
         <div className="container mx-auto px-4 text-center text-zinc-400">
-          <p>&copy; 2023 Nathan's Financial Tool. All rights reserved.</p>
+          <p>&copy; 2024 Nathan's Financial Tool. All rights reserved.</p>
         </div>
       </footer>
     </div>
