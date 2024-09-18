@@ -193,7 +193,12 @@ export default function AuthPage() {
               </div>
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full"
+              variant="secondary"
+              disabled={isLoading}
+            >
               {isLogin ? "Login" : "Sign Up"}
             </Button>
           </form>
