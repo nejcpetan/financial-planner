@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, router } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Eye, EyeOff, LockKeyhole, Github, Twitter } from "lucide-react";
@@ -15,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +26,7 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true); // New state to toggle between login/signup
 
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,6 +78,20 @@ export default function AuthPage() {
 
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN") {
+          router.push("/dashboard");
+        }
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-zinc-950 text-zinc-50 p-4">

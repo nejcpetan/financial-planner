@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useLogout } from "@/utils/logout"; // Import the logout logic
+import Link from "next/link";
 import {
   BarChart2,
   DollarSign,
@@ -72,6 +74,8 @@ export default function AccountsPayablePage() {
   const [sortColumn, setSortColumn] = useState("dueDate");
   const [sortDirection, setSortDirection] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { handleLogout } = useLogout(); // Use the handleLogout hook
 
   const menuItems = [
     { name: "Dashboard", icon: BarChart2, href: "/" },
@@ -162,9 +166,16 @@ export default function AccountsPayablePage() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Log out</DropdownMenuItem>
+              <DropdownMenuItem href="/settings#radix-:R5afnj6:-trigger-account">
+                Profile
+              </DropdownMenuItem>
+              <Link href="/settings">
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem onClick={handleLogout}>
+                {/* Logout button */}
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

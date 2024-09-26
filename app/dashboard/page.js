@@ -1,6 +1,10 @@
 "use client";
 
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+const supabase = createClientComponentClient();
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   BarChart2,
   DollarSign,
@@ -59,6 +63,16 @@ export default function Dashboard() {
     },
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      router.push("/"); // Redirect to login page after logout
+    } else {
+      console.error("Error logging out:", error.message);
+    }
+  };
+
+  const router = useRouter();
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-zinc-950 text-zinc-50">
@@ -114,8 +128,12 @@ export default function Dashboard() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Log out</DropdownMenuItem>
+              <Link href="/settings">
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem onClick={handleLogout}>
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

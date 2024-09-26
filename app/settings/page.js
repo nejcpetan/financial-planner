@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useLogout } from "@/utils/logout"; // Import the logout logic
+import Link from "next/link";
 import {
   BarChart2,
   DollarSign,
@@ -40,7 +42,7 @@ import {
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Settings");
-
+  const { handleLogout } = useLogout(); // Use the handleLogout hook
   const menuItems = [
     { name: "Dashboard", icon: BarChart2, href: "/" },
     {
@@ -110,8 +112,12 @@ export default function SettingsPage() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Log out</DropdownMenuItem>
+              <Link href="/settings">
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem onClick={handleLogout}>
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
