@@ -110,9 +110,9 @@ export default function AccountsPayablePage() {
   );
 
   return (
-    <div className="flex h-screen bg-zinc-950 text-zinc-50">
+    <div className="flex flex-col md:flex-row h-screen bg-zinc-950 text-zinc-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-zinc-900 border-r border-zinc-800">
+      <aside className="w-full md:w-64 bg-zinc-900 border-b md:border-r border-zinc-800">
         <div className="p-4">
           <h1 className="text-xl font-bold text-zinc-50">
             Nathan's Financial Tool
@@ -170,13 +170,13 @@ export default function AccountsPayablePage() {
         </header>
 
         {/* Accounts Payable content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-zinc-950 p-6">
-          <div className="max-w-6xl mx-auto space-y-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-zinc-50">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-zinc-950 p-4 md:p-6">
+          <div className="max-w-full md:max-w-6xl mx-auto space-y-4 md:space-y-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+              <h3 className="text-lg md:text-xl font-semibold text-zinc-50">
                 Outstanding Invoices
               </h3>
-              <div className="relative">
+              <div className="w-full md:w-auto relative">
                 <Search
                   className="absolute left-2 top-1/2 transform -translate-y-1/2 text-zinc-400"
                   size={20}
@@ -184,13 +184,13 @@ export default function AccountsPayablePage() {
                 <Input
                   type="text"
                   placeholder="Search invoices..."
-                  className="pl-10 bg-zinc-800 border-zinc-700 text-zinc-100"
+                  className="w-full md:w-64 pl-10 bg-zinc-800 border-zinc-700 text-zinc-100"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
-            <div className="bg-zinc-900 rounded-lg border border-zinc-800 overflow-hidden">
+            <div className="overflow-x-auto bg-zinc-900 rounded-lg border border-zinc-800">
               <Table>
                 <TableHeader>
                   <TableRow>

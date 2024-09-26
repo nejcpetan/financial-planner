@@ -5,10 +5,9 @@ import {
   DollarSign,
   FileText,
   Settings,
-  ChevronDown,
-  ChevronUp,
-  Search,
-  Plus,
+  PlusCircle,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -38,57 +43,55 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const initialIncomeStreams = [
+const incomeStreams = [
   {
     id: 1,
-    source: "Salary",
-    amount: 5000.0,
+    name: "Full-time Job",
+    amount: 5000,
     frequency: "Monthly",
-    lastReceived: "2023-06-30",
+    category: "Employment",
   },
   {
     id: 2,
-    source: "Freelance Work",
-    amount: 1500.0,
+    name: "Freelance Work",
+    amount: 1000,
     frequency: "Monthly",
-    lastReceived: "2023-06-25",
+    category: "Self-Employment",
   },
   {
     id: 3,
-    source: "Investments",
-    amount: 500.0,
-    frequency: "Monthly",
-    lastReceived: "2023-06-15",
+    name: "Dividend Income",
+    amount: 200,
+    frequency: "Quarterly",
+    category: "Investments",
   },
   {
     id: 4,
-    source: "Rental Income",
-    amount: 1200.0,
+    name: "Rental Property",
+    amount: 1500,
     frequency: "Monthly",
-    lastReceived: "2023-07-01",
+    category: "Real Estate",
   },
   {
     id: 5,
-    source: "Side Business",
-    amount: 800.0,
+    name: "Online Course Sales",
+    amount: 500,
     frequency: "Monthly",
-    lastReceived: "2023-06-28",
+    category: "Digital Products",
   },
 ];
 
 export default function IncomeStreamsPage() {
   const [activeTab, setActiveTab] = useState("Manage Income Streams");
-  const [sortColumn, setSortColumn] = useState("lastReceived");
-  const [sortDirection, setSortDirection] = useState("desc");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [incomeStreams, setIncomeStreams] = useState(initialIncomeStreams);
-  const [newIncome, setNewIncome] = useState({
-    source: "",
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newIncomeStream, setNewIncomeStream] = useState({
+    name: "",
     amount: "",
-    frequency: "Monthly",
-    lastReceived: "",
+    frequency: "",
+    category: "",
   });
 
   const menuItems = [
@@ -106,46 +109,18 @@ export default function IncomeStreamsPage() {
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
 
-  const handleSort = (column) => {
-    if (column === sortColumn) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortColumn(column);
-      setSortDirection("asc");
-    }
-  };
-
-  const sortedIncomeStreams = [...incomeStreams].sort((a, b) => {
-    if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-    if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
-    return 0;
-  });
-
-  const filteredIncomeStreams = sortedIncomeStreams.filter(
-    (stream) =>
-      stream.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      stream.frequency.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleNewIncomeSubmit = (e) => {
+  const handleAddIncomeStream = (e) => {
     e.preventDefault();
-    const newId = Math.max(...incomeStreams.map((stream) => stream.id)) + 1;
-    setIncomeStreams([
-      ...incomeStreams,
-      { ...newIncome, id: newId, amount: parseFloat(newIncome.amount) },
-    ]);
-    setNewIncome({
-      source: "",
-      amount: "",
-      frequency: "Monthly",
-      lastReceived: "",
-    });
+    // Logic to add new income stream
+    console.log("New income stream:", newIncomeStream);
+    setIsAddDialogOpen(false);
+    setNewIncomeStream({ name: "", amount: "", frequency: "", category: "" });
   };
 
   return (
-    <div className="flex h-screen bg-zinc-950 text-zinc-50">
+    <div className="flex flex-col md:flex-row h-screen bg-zinc-950 text-zinc-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-zinc-900 border-r border-zinc-800">
+      <aside className="w-full md:w-64 bg-zinc-900 border-b md:border-r border-zinc-800">
         <div className="p-4">
           <h1 className="text-xl font-bold text-zinc-50">
             Nathan's Financial Tool
@@ -203,205 +178,171 @@ export default function IncomeStreamsPage() {
         </header>
 
         {/* Income Streams content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-zinc-950 p-6">
-          <div className="max-w-6xl mx-auto space-y-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-zinc-50">
-                Income Streams
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-zinc-950 p-4 md:p-6">
+          <div className="max-w-full md:max-w-6xl mx-auto space-y-4 md:space-y-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+              <h3 className="text-lg md:text-xl font-semibold text-zinc-50">
+                Your Income Streams
               </h3>
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <Search
-                    className="absolute left-2 top-1/2 transform -translate-y-1/2 text-zinc-400"
-                    size={20}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Search income streams..."
-                    className="pl-10 bg-zinc-800 border-zinc-700 text-zinc-100"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="bg-green-600 hover:bg-green-700">
-                      <Plus className="mr-2 h-4 w-4" /> Add New Income
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px] bg-zinc-900 text-zinc-50">
-                    <DialogHeader>
-                      <DialogTitle>Add New Income</DialogTitle>
-                      <DialogDescription>
-                        Enter the details of your new income stream here.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleNewIncomeSubmit}>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="source" className="text-right">
-                            Source
-                          </Label>
-                          <Input
-                            id="source"
-                            className="col-span-3 bg-zinc-800 border-zinc-700 text-zinc-100"
-                            value={newIncome.source}
-                            onChange={(e) =>
-                              setNewIncome({
-                                ...newIncome,
-                                source: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="amount" className="text-right">
-                            Amount
-                          </Label>
-                          <Input
-                            id="amount"
-                            type="number"
-                            className="col-span-3 bg-zinc-800 border-zinc-700 text-zinc-100"
-                            value={newIncome.amount}
-                            onChange={(e) =>
-                              setNewIncome({
-                                ...newIncome,
-                                amount: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="frequency" className="text-right">
-                            Frequency
-                          </Label>
-                          <select
-                            id="frequency"
-                            className="col-span-3 bg-zinc-800 border-zinc-700 text-zinc-100 rounded-md"
-                            value={newIncome.frequency}
-                            onChange={(e) =>
-                              setNewIncome({
-                                ...newIncome,
-                                frequency: e.target.value,
-                              })
-                            }
-                          >
-                            <option>Monthly</option>
-                            <option>Weekly</option>
-                            <option>Bi-weekly</option>
-                            <option>Annually</option>
-                          </select>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="lastReceived" className="text-right">
-                            Last Received
-                          </Label>
-                          <Input
-                            id="lastReceived"
-                            type="date"
-                            className="col-span-3 bg-zinc-800 border-zinc-700 text-zinc-100"
-                            value={newIncome.lastReceived}
-                            onChange={(e) =>
-                              setNewIncome({
-                                ...newIncome,
-                                lastReceived: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-zinc-50">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Income Stream
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-zinc-900 text-zinc-50">
+                  <DialogHeader>
+                    <DialogTitle>Add New Income Stream</DialogTitle>
+                    <DialogDescription className="text-zinc-400">
+                      Enter the details of your new income stream here.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleAddIncomeStream}>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                          Name
+                        </Label>
+                        <Input
+                          id="name"
+                          value={newIncomeStream.name}
+                          onChange={(e) =>
+                            setNewIncomeStream({
+                              ...newIncomeStream,
+                              name: e.target.value,
+                            })
+                          }
+                          className="col-span-3 bg-zinc-800 text-zinc-50 border-zinc-700"
+                        />
                       </div>
-                      <DialogFooter>
-                        <Button type="submit">Add Income Stream</Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="amount" className="text-right">
+                          Amount
+                        </Label>
+                        <Input
+                          id="amount"
+                          type="number"
+                          value={newIncomeStream.amount}
+                          onChange={(e) =>
+                            setNewIncomeStream({
+                              ...newIncomeStream,
+                              amount: e.target.value,
+                            })
+                          }
+                          className="col-span-3 bg-zinc-800 text-zinc-50 border-zinc-700"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="frequency" className="text-right">
+                          Frequency
+                        </Label>
+                        <Input
+                          id="frequency"
+                          value={newIncomeStream.frequency}
+                          onChange={(e) =>
+                            setNewIncomeStream({
+                              ...newIncomeStream,
+                              frequency: e.target.value,
+                            })
+                          }
+                          className="col-span-3 bg-zinc-800 text-zinc-50 border-zinc-700"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="category" className="text-right">
+                          Category
+                        </Label>
+                        <Input
+                          id="category"
+                          value={newIncomeStream.category}
+                          onChange={(e) =>
+                            setNewIncomeStream({
+                              ...newIncomeStream,
+                              category: e.target.value,
+                            })
+                          }
+                          className="col-span-3 bg-zinc-800 text-zinc-50 border-zinc-700"
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-zinc-50"
+                      >
+                        Add Income Stream
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
-            <div className="bg-zinc-900 rounded-lg border border-zinc-800 overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead
-                      className="text-zinc-400"
-                      onClick={() => handleSort("source")}
-                    >
-                      Source
-                      {sortColumn === "source" &&
-                        (sortDirection === "asc" ? (
-                          <ChevronUp className="inline ml-1" size={16} />
-                        ) : (
-                          <ChevronDown className="inline ml-1" size={16} />
-                        ))}
-                    </TableHead>
-                    <TableHead
-                      className="text-zinc-400"
-                      onClick={() => handleSort("amount")}
-                    >
-                      Amount
-                      {sortColumn === "amount" &&
-                        (sortDirection === "asc" ? (
-                          <ChevronUp className="inline ml-1" size={16} />
-                        ) : (
-                          <ChevronDown className="inline ml-1" size={16} />
-                        ))}
-                    </TableHead>
-                    <TableHead
-                      className="text-zinc-400"
-                      onClick={() => handleSort("frequency")}
-                    >
-                      Frequency
-                      {sortColumn === "frequency" &&
-                        (sortDirection === "asc" ? (
-                          <ChevronUp className="inline ml-1" size={16} />
-                        ) : (
-                          <ChevronDown className="inline ml-1" size={16} />
-                        ))}
-                    </TableHead>
-                    <TableHead
-                      className="text-zinc-400"
-                      onClick={() => handleSort("lastReceived")}
-                    >
-                      Last Received
-                      {sortColumn === "lastReceived" &&
-                        (sortDirection === "asc" ? (
-                          <ChevronUp className="inline ml-1" size={16} />
-                        ) : (
-                          <ChevronDown className="inline ml-1" size={16} />
-                        ))}
-                    </TableHead>
-                    <TableHead className="text-zinc-400">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredIncomeStreams.map((stream) => (
-                    <TableRow key={stream.id}>
-                      <TableCell className="font-medium text-zinc-300">
-                        {stream.source}
-                      </TableCell>
-                      <TableCell className="text-zinc-300">
-                        ${stream.amount.toFixed(2)}
-                      </TableCell>
-                      <TableCell className="text-zinc-300">
-                        {stream.frequency}
-                      </TableCell>
-                      <TableCell className="text-zinc-300">
-                        {stream.lastReceived}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-zinc-300 border-zinc-700 hover:bg-zinc-800"
-                        >
-                          Edit
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CardHeader>
+                <CardTitle className="text-zinc-50">Income Streams</CardTitle>
+                <CardDescription className="text-zinc-400">
+                  A list of your current income streams.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-zinc-800">
+                        <TableHead className="text-zinc-400">Name</TableHead>
+                        <TableHead className="text-zinc-400">Amount</TableHead>
+                        <TableHead className="text-zinc-400">
+                          Frequency
+                        </TableHead>
+                        <TableHead className="text-zinc-400">
+                          Category
+                        </TableHead>
+                        <TableHead className="text-zinc-400">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {incomeStreams.map((stream) => (
+                        <TableRow key={stream.id} className="border-zinc-800">
+                          <TableCell className="font-medium text-zinc-300">
+                            {stream.name}
+                          </TableCell>
+                          <TableCell className="text-zinc-300">
+                            ${stream.amount}
+                          </TableCell>
+                          <TableCell className="text-zinc-300">
+                            {stream.frequency}
+                          </TableCell>
+                          <TableCell className="text-zinc-300">
+                            {stream.category}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-zinc-400 hover:text-zinc-50"
+                              >
+                                <Edit className="h-4 w-4" />
+                                <span className="sr-only">Edit</span>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-zinc-400 hover:text-zinc-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                                <span className="sr-only">Delete</span>
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>

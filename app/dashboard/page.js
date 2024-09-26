@@ -61,9 +61,9 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="flex h-screen bg-zinc-950 text-zinc-50">
+    <div className="flex flex-col md:flex-row h-screen bg-zinc-950 text-zinc-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-zinc-900 border-r border-zinc-800">
+      <aside className="w-full md:w-64 bg-zinc-900 border-b md:border-r border-zinc-800">
         <div className="p-4">
           <h1 className="text-xl font-bold text-zinc-50">
             Nathan's Financial Tool
@@ -121,9 +121,9 @@ export default function Dashboard() {
         </header>
 
         {/* Dashboard content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-zinc-950 p-6">
-          <div className="max-w-6xl mx-auto space-y-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-zinc-950 p-4 md:p-6">
+          <div className="max-w-full md:max-w-6xl mx-auto space-y-4 md:space-y-6">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               <Card className="bg-zinc-900 border-zinc-800">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-zinc-400">
@@ -178,28 +178,28 @@ export default function Dashboard() {
             </div>
 
             <Tabs defaultValue="overview" className="space-y-4">
-              <TabsList className="bg-zinc-800">
+              <TabsList className="w-full overflow-x-auto flex whitespace-nowrap bg-zinc-800">
                 <TabsTrigger
                   value="overview"
-                  className="data-[state=active]:bg-zinc-900"
+                  className="flex-shrink-0 data-[state=active]:bg-zinc-900"
                 >
                   Overview
                 </TabsTrigger>
                 <TabsTrigger
                   value="budget"
-                  className="data-[state=active]:bg-zinc-900"
+                  className="flex-shrink-0 data-[state=active]:bg-zinc-900"
                 >
                   Budget
                 </TabsTrigger>
                 <TabsTrigger
                   value="savings"
-                  className="data-[state=active]:bg-zinc-900"
+                  className="flex-shrink-0 data-[state=active]:bg-zinc-900"
                 >
                   Savings Goals
                 </TabsTrigger>
                 <TabsTrigger
                   value="transactions"
-                  className="data-[state=active]:bg-zinc-900"
+                  className="flex-shrink-0 data-[state=active]:bg-zinc-900"
                 >
                   Recent Transactions
                 </TabsTrigger>
@@ -436,7 +436,7 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <form className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="housing" className="text-zinc-300">
                         Housing
@@ -488,7 +488,7 @@ export default function Dashboard() {
                   </div>
                   <Button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-zinc-50"
+                    className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-zinc-50"
                   >
                     Update Budget
                   </Button>
